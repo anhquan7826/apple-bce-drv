@@ -3,4 +3,5 @@
 *.o*
 *.ko*
 *.order
+build/
 Module.symvers

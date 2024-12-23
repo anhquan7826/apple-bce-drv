@@ -8,4 +8,30 @@ The project is divided into 3 main components:
 
 Please note that the `master` branch does not currently support system suspend and resume.
 
+## Requirement
+<em>Copied from [T2Linux](https://wiki.t2linux.org/guides/kernel/)</em>
+
+You will need some packages to build the kernel:
+- Arch based systems: `sudo pacman --needed -S bc kmod libelf pahole cpio perl tar xz git`
+- Debian based systems: `sudo apt install autoconf bc bison build-essential cpio curl debhelper dkms dwarves fakeroot flex gawk git kernel-wedge libcap-dev libelf-dev libiberty-dev libncurses-dev libpci-dev libssl-dev libudev-dev openssl python3 rsync wget xz-utils zstd`
+- For other distros you will need the equivalent of these, but if you miss something you'll most likely get an error saying what's missing, and you can then install it and re-run make to continue where you left off.
+
+You will need about 20GB of disk space to compile the kernel. If you have a large amount of ram, you could use tmpfs to store build files in ram.
+
+## Building
+```
+mkdir build && cd build
+git clone --depth=1 https://github.com/t2linux/linux-t2-patches patches
+
+pkgver=$(curl -sL https://github.com/t2linux/T2-Ubuntu-Kernel/releases/latest/ | grep "<title>Release" | awk -F " " '{print $2}' | cut -d "v" -f 2 | cut -d "-" -f 1)
+_srcname=linux-${pkgver}
+wget https://www.kernel.org/pub/linux/kernel/v${pkgver//.*}.x/linux-${pkgver}.tar.xz
+tar xf $_srcname.tar.xz
+cd $_srcname
+
+for patch in ../patches/*.patch; do
+    patch -Np1 < $patch
+done
+```
+
 If you want to support me, you can do so by donating to me on PayPal: https://paypal.me/mcmrarm

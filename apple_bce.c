@@ -4,6 +4,8 @@
 #include "audio/audio.h"
 #include <linux/version.h>
 
+static int allow_audio = 1;
+
 static dev_t bce_chrdev;
 static struct class *bce_class;
 
@@ -413,7 +415,8 @@ static int __init apple_bce_module_init(void)
     if (result)
         goto fail_drv;
 
-    aaudio_module_init();
+    if (allow_audio)
+        aaudio_module_init();
 
     return 0;
 
@@ -431,7 +434,8 @@ static void __exit apple_bce_module_exit(void)
 {
     pci_unregister_driver(&apple_bce_pci_driver);
 
-    aaudio_module_exit();
+    if (allow_audio)
+        aaudio_module_exit();
     bce_vhci_module_exit();
     class_destroy(bce_class);
     unregister_chrdev_region(bce_chrdev, 1);
@@ -440,6 +444,9 @@ static void __exit apple_bce_module_exit(void)
 MODULE_LICENSE("GPL");
 MODULE_AUTHOR("MrARM");
 MODULE_DESCRIPTION("Apple BCE Driver");
-MODULE_VERSION("0.01");
+MODULE_VERSION("0.02-unofficial");
+
+module_param(allow_audio, int, 0644);
+
 module_init(apple_bce_module_init);
 module_exit(apple_bce_module_exit);
