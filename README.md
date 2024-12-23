@@ -34,4 +34,4 @@ for patch in ../patches/*.patch; do
 done
 ```
 
-If you want to support me, you can do so by donating to me on PayPal: https://paypal.me/mcmrarm
+Credit: MCMrARM. Support him here: [Paypal](https://paypal.me/mcmrarm)
